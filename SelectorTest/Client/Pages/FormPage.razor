@@ -1,0 +1,52 @@
+﻿@page "/form"
+
+<p>Total count is: <b>@selectedCias.Count</b></p>
+
+<EditForm Model="@selectedCias" OnValidSubmit="@AddCompany">
+	<DataAnnotationsValidator />
+	<MultipleSelectorTypeahead Context="company"
+							   SearchMethod="SearchCompanies" SelectedElements="selectedCias">
+		<MyResultTemplate>
+			Company: <b>@company.Name</b>
+		</MyResultTemplate>
+		<MyListTemplate>
+			Company: <b>@company.Name</b>
+		</MyListTemplate>
+	</MultipleSelectorTypeahead>
+	<ValidationMessage For="@(() => selectedCias)" />
+	<br />
+	<button class="btn btn-primary" type="submit">Submit</button>
+</EditForm>
+
+@code {
+
+	public class ExchangeCompanyDTO
+	{
+		public string Name { get; set; }
+	}
+
+	[Parameter] public List<ExchangeCompanyDTO> selectedCias { get; set; } = new List<ExchangeCompanyDTO>();
+	
+	protected async Task AddCompany()
+	{
+		Console.WriteLine(selectedCias.Count);
+		await Task.CompletedTask;
+	}
+
+	private async Task<IEnumerable<ExchangeCompanyDTO>> SearchCompanies(string searchText)
+    {
+		await Task.CompletedTask;
+        return new List<ExchangeCompanyDTO>()
+		{
+			new ExchangeCompanyDTO {Name = "Apple"},
+			new ExchangeCompanyDTO {Name = "Amazon"}
+		};
+
+
+        //var testresult = result.OrderBy(o => o.NewName).ThenBy(o => o.Ranking).GroupBy(o => o.NewName).Select(o => o.Take(3).ToList());
+
+
+        //return result.OrderBy(o => o.NewName).ThenBy(o => o.Ranking).GroupBy(o => o.NewName).Select(o => o.FirstOrDefault()).Take(15);
+        //return result.OrderBy(o => o.NewName).ThenBy(o => o.Ranking);
+    }
+}
