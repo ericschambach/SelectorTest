@@ -4,8 +4,8 @@
 
 <EditForm Model="@selectedCias" OnValidSubmit="@AddCompany">
 	<DataAnnotationsValidator />
-	<MultipleSelectorTypeahead Context="company"
-							   SearchMethod="SearchCompanies" SelectedElements="selectedCias">
+	<MultipleSelectorTypeahead Context="company" OnChange="dto => OnChange(dto)" OnRemove="dto => OnRemove(dto)"
+							SearchMethod="SearchCompanies" SelectedElements="selectedCias">
 		<MyResultTemplate>
 			Company: <b>@company.Name</b>
 		</MyResultTemplate>
@@ -31,6 +31,18 @@
 	{
 		Console.WriteLine(selectedCias.Count);
 		await Task.CompletedTask;
+	}
+
+	protected void OnChange(ExchangeCompanyDTO item)
+	{
+		Console.WriteLine(item.Name); // in case you need it
+		StateHasChanged(); // this is what updates the UI
+	}
+
+	protected void OnRemove(ExchangeCompanyDTO item)
+	{
+		Console.WriteLine(item.Name); // in case you need it
+		StateHasChanged(); // this is what updates the UI
 	}
 
 	private async Task<IEnumerable<ExchangeCompanyDTO>> SearchCompanies(string searchText)

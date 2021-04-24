@@ -15,7 +15,7 @@
             @ondragover="@(() => HandleDragOver(item))"
             class="list-group-item list-group-item-action">
             @MyListTemplate(item)
-            <span @onclick="@(() => SelectedElements.Remove(item))"
+            <span @onclick="@(() => RemoveElement(item))"
                   class="badge badge-primary badge-pill"
                   style="cursor: pointer">X</span>
         </li>
@@ -27,6 +27,8 @@
     [Parameter] public Func<string, Task<IEnumerable<T>>> SearchMethod { get; set; }
     [Parameter] public RenderFragment<T> MyResultTemplate { get; set; }
     [Parameter] public RenderFragment<T> MyListTemplate { get; set; }
+    [Parameter] public Action<T> OnChange { get; set; } = (T item) => { }; // NEW
+    [Parameter] public Action<T> OnRemove { get; set; } = (T item) => { }; // NEW
     T draggedItem;
 
     private void SelectedElement(T item)
@@ -34,7 +36,15 @@
         if (!SelectedElements.Any(x => x.Equals(item)))
         {
             SelectedElements.Add(item);
+           
+            OnChange(item); // NEW
         }
+    }
+
+    private void RemoveElement(T item)
+    {
+        SelectedElements.Remove(item);
+        OnRemove(item);
     }
 
     private void HandleDragStart(T item)
