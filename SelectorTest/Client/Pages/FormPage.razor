@@ -1,6 +1,6 @@
 ﻿@page "/form"
 
-<p>Total count is: <b>@selectedCias.Count</b></p>
+<p>@($"Number total is {selectedCias.Select(o => o.Name).ToList().Count} and distinct total is {selectedCias.Select(o => o.Name).Distinct().ToList().Count}")</p>
 
 <EditForm Model="@selectedCias" OnValidSubmit="@AddCompany">
 	<DataAnnotationsValidator />
@@ -35,14 +35,18 @@
 
 	protected void OnChange(ExchangeCompanyDTO item)
 	{
-		Console.WriteLine(item.Name); // in case you need it
-		StateHasChanged(); // this is what updates the UI
+		//Console.WriteLine(item.Name); // in case you need it
+											// this is what updates the
+		StateHasChanged();
+		//Console.WriteLine($"Number total is {selectedCias.Select(o => o.Name).ToList().Count} and distinct total is {selectedCias.Select(o => o.Name).Distinct().ToList().Count}");
+		selectedCias = selectedCias.GroupBy(o => o.Name).Select(x => x.FirstOrDefault()).ToList();
+		
 	}
 
 	protected void OnRemove(ExchangeCompanyDTO item)
 	{
 		Console.WriteLine(item.Name); // in case you need it
-		StateHasChanged(); // this is what updates the UI
+		StateHasChanged();// this is what updates the UI
 	}
 
 	private async Task<IEnumerable<ExchangeCompanyDTO>> SearchCompanies(string searchText)

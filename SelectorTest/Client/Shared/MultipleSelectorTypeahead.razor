@@ -33,7 +33,8 @@
 
     private void SelectedElement(T item)
     {
-        if (!SelectedElements.Any(x => x.Equals(item)))
+        //OnChange(item); 
+        if (!SelectedElements.Contains(item))//Any(x => x.Equals(item)))
         {
             SelectedElements.Add(item);
            
